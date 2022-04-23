@@ -44,18 +44,19 @@ MainWindow::~MainWindow()
 //    if (path.isEmpty())
 //          return;
 //    QDir dir(path);
-//    if(!dir.exists())
+//    if (!dir.exists())
 //        return;
 //    dir.setFilter(QDir::AllEntries | QDir::NoDotAndDotDot);
 //    QFileInfoList fileList = dir.entryInfoList();
-//    foreach (QFileInfo file, fileList){
-//        if (file.isFile()){
+//    foreach (QFileInfo file, fileList）
+//    {
+//        if (file.isFile())
+//        {
 //            bool isDelete = file.dir().remove(file.fileName());
-//            if(isDelete) {
+//            if (isDelete)
 //                m_fileCount++;
-//            }
 //            qDebug() << "isDelete= " << isDelete << " m_fileCount = " << m_fileCount << " filename= " << file.fileName();
-//        }else{
+//        } else {
 //            deleteDir(file.absoluteFilePath());
 //        }
 //    }
