@@ -19,7 +19,7 @@ Qt est une API portable, orientée objet et développée en C++. Elle est consti
 
 Le protocole *UDP* (User Datagram Protocol) permet aux applications d'échanger des datagrammes. Celui-ci fournit un service en mode non-connecté et sans reprise sur erreur.
 
-Le multipoint (*Multicast*) est un mode diffusion permettant d'adresser des groupes de machines tout en étant plus sélectif qu'une diffusion *Broadcast*. Pour cela on utilise des adresses IP de classe D.
+Le multipoint (*Multicast*) est un mode de diffusion permettant d'adresser des groupes de machines tout en étant plus sélectif qu'une diffusion *Broadcast*. Pour cela on utilise des adresses IP de classe D.
 
 
 
