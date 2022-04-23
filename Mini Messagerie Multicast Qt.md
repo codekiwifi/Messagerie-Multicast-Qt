@@ -2,7 +2,8 @@
 
 Un petit logiciel qui se base sur UDP et Qt pour permettre de s'envoyer des messages, des images ou des fichiers.
 
-![image-20220423213237518](C:\Users\h8043\AppData\Roaming\Typora\typora-user-images\image-20220423213237518.png)
+![image-20220423213237518](https://user-images.githubusercontent.com/82091053/164944294-42d2ecc8-0892-4b93-9956-7d7db65a8017.png)
+
 
 
 
