@@ -1,8 +1,9 @@
 ## Mini Messagerie Multicast Qt
 
 Un petit logiciel qui se base sur UDP et Qt pour permettre de s'envoyer des messages, des images ou des fichiers.
+![image-20220423213237518](https://user-images.githubusercontent.com/82091053/164944349-96c05fe3-ff57-4a39-8357-2895eb2f5d6b.png)
 
-![image-20220423213237518](C:\Users\h8043\AppData\Roaming\Typora\typora-user-images\image-20220423213237518.png)
+
 
 
 
@@ -18,7 +19,7 @@ Qt est une API portable, orientée objet et développée en C++. Elle est consti
 
 Le protocole *UDP* (User Datagram Protocol) permet aux applications d'échanger des datagrammes. Celui-ci fournit un service en mode non-connecté et sans reprise sur erreur.
 
-Le multipoint (*Multicast*) est un mode diffusion permettant d'adresser des groupes de machines tout en étant plus sélectif qu'une diffusion (*Broadcast*). Pour cela on utilise des adresses IP de classe D.
+Le multipoint (*Multicast*) est un mode diffusion permettant d'adresser des groupes de machines tout en étant plus sélectif qu'une diffusion *Broadcast*. Pour cela on utilise des adresses IP de classe D.
 
 
 
