@@ -138,7 +138,7 @@ QImage MainWindow::get_imagedata_from_byte(const QString &data)
 void MainWindow::on_pushButton_Send_Image_clicked()
 {
     QString file_name = QFileDialog::getOpenFileName(this, "Image à envoyer", QDir::currentPath(), "Image Files(*.jpg *.png)");
-    if(file_name == "")
+    if (file_name == "")
         return;
 
     image.load(file_name);
