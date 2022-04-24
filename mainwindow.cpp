@@ -29,11 +29,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(receiver, &QUdpSocket::readyRead, this, &MainWindow::processPendingDatagram);
 
     QDir dir("./images");
-    if(!dir.exists())
+    if (!dir.exists())
         dir.mkdir("./images");
 
     QDir dir_tmp("./tmp");
-    if(!dir.exists())
+    if (!dir.exists())
         dir.mkdir("./tmp");
 }
 
