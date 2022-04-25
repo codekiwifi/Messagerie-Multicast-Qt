@@ -4,6 +4,7 @@
 #include <QBuffer>
 #include <QFileDialog>
 #include <QImage>
+#include <QInputDialog>
 
 
 #define MULTICAST_ADDRESS "239.255.255.252"
@@ -12,11 +13,16 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    isJoined_(false),
+    count_image(0)
 {
     ui->setupUi(this);
     this->setWindowTitle("Messagerie Multicast");
+    // this->setWindowIcon(QIcon(":/res/icon.ico"));
     ui->lineEdit->setText("Anonyme");
+
+
 
     sender = new QUdpSocket(this);
     sender->setSocketOption(QAbstractSocket::MulticastTtlOption, 1);
@@ -35,6 +41,23 @@ MainWindow::MainWindow(QWidget *parent) :
     QDir dir_tmp("./tmp");
     if (!dir.exists())
         dir.mkdir("./tmp");
+
+    bool ok;
+    QString text = QInputDialog::getText(this,
+                          tr("Messagerie Multicast"),
+                          tr("Choisissez votre pseudo"),
+                          QLineEdit::Normal,
+                          QDir::home().dirName(),
+                          &ok);
+
+    if ( ok && !text.isEmpty() )
+        ui->lineEdit->setText(text);
+    else
+        ui->lineEdit->setText("Anonyme");
+
+    ui->lineEdit->setReadOnly(true);
+
+    on_pushButton_Send_clicked();
 }
 
 
@@ -44,34 +67,52 @@ MainWindow::~MainWindow()
 //    if (path.isEmpty())
 //          return;
 //    QDir dir(path);
-//    if (!dir.exists())
+//    if(!dir.exists())
 //        return;
 //    dir.setFilter(QDir::AllEntries | QDir::NoDotAndDotDot);
 //    QFileInfoList fileList = dir.entryInfoList();
-//    foreach (QFileInfo file, fileList）
-//    {
-//        if (file.isFile())
-//        {
+//    foreach (QFileInfo file, fileList){
+//        if (file.isFile()){
 //            bool isDelete = file.dir().remove(file.fileName());
-//            if (isDelete)
+//            if(isDelete) {
 //                m_fileCount++;
+//            }
 //            qDebug() << "isDelete= " << isDelete << " m_fileCount = " << m_fileCount << " filename= " << file.fileName();
-//        } else {
+//        }else{
 //            deleteDir(file.absoluteFilePath());
 //        }
 //    }
 //    dir.rmpath(dir.absolutePath());
+    QByteArray datagram = ui->lineEdit->text().toUtf8();
+    datagram = datagram + " s'est deco :(";
+    sender->writeDatagram(datagram, QHostAddress(MULTICAST_ADDRESS), MULTICAST_PORT);
     delete ui;
+}
+
+
+void MainWindow::setisJoined(const bool& isJoined)
+{
+    this->isJoined_ = isJoined;
 }
 
 
 void MainWindow::on_pushButton_Send_clicked()
 {
-    QByteArray message = ui->textEdit->toPlainText().toUtf8();
-    QByteArray datagram = ui->lineEdit->text().toUtf8();
-    datagram = datagram + " : " + message;
-    sender->writeDatagram(datagram, QHostAddress(MULTICAST_ADDRESS), MULTICAST_PORT);
-    ui->textEdit->clear();
+    if (isJoined_ == true)
+    {
+        QByteArray message = ui->textEdit->toPlainText().toUtf8();
+        QByteArray datagram = ui->lineEdit->text().toUtf8();
+        datagram = datagram + " : " + message;
+        sender->writeDatagram(datagram, QHostAddress(MULTICAST_ADDRESS), MULTICAST_PORT);
+        ui->textEdit->clear();
+    } else
+    {
+        QByteArray datagram = ui->lineEdit->text().toUtf8();
+        datagram = datagram + ":arejoint#147258!@.";
+        sender->writeDatagram(datagram, QHostAddress(MULTICAST_ADDRESS), MULTICAST_PORT);
+        ui->textEdit->clear();
+        setisJoined(true);
+    }
 }
 
 
@@ -98,6 +139,12 @@ void MainWindow::processPendingDatagram()
             {
                 ui->textBrowser->append(msg_split[0] + " a envoyé une image.");
                 ui->label_envoyeurImage->setText("Image envoyée par " + msg_split[0]);
+            } else if (msg_split[0] != "Anonyme" and msg_split[1] == "arejoint#147258!@.")
+            {
+                ui->textBrowser->append(msg_split[0] + " a rejoint la discussion !");
+            } else if (msg_split[0] == "Anonyme" and msg_split[1] == "arejoint#147258!@.")
+            {
+                ui->textBrowser->append("Anonyme " + QString::number(peerPort) + " a rejoint la discussion !");
             } else
             {
                 ui->textBrowser->append(datagram.data());
@@ -145,7 +192,7 @@ void MainWindow::on_pushButton_Send_Image_clicked()
     ui->label_image->setPixmap(QPixmap::fromImage(image).scaled(ui->label_image->size()));
 
     image_file_data = get_imagedata_from_imagefile(image);
-    sender->writeDatagram(image_file_data.toLatin1(),image_file_data.size(),QHostAddress(MULTICAST_ADDRESS), MULTICAST_PORT);
+    sender->writeDatagram(image_file_data.toLatin1(), image_file_data.size(), QHostAddress(MULTICAST_ADDRESS), MULTICAST_PORT);
 
     QByteArray datagram = ui->lineEdit->text().toUtf8();
     datagram += ":/image#147258!@.";
