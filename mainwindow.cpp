@@ -199,7 +199,9 @@ void MainWindow::on_pushButton_Send_Image_clicked()
 
 void MainWindow::on_pushButton_Send_Image_2_clicked()
 {
+    QString file_path = QFileDialog::getExistingDirectory(this, "Enregistrer sous...", "./");
     QImage image_temp = QImage(QString("./tmp/image%1.png").arg(count_image-1));
-    if (image_temp.save(QString("./images/image%1.png").arg(count_image-1), "PNG"))
+    if (!image_temp.save(file_path + QString("/image%1.png").arg(count_image-1), "PNG"))
+        // qDebug() << file_path + QString("/image%1.png").arg(count_image-1) << endl;
         return;
 }
