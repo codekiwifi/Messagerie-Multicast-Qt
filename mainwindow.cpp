@@ -11,55 +11,56 @@
 #define MULTICAST_PORT    12345
 
 
+/* Constructeur fenetre principale */
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     isJoined_(false),
     count_image(0)
 {
+    /* Setup fenetre */
     ui->setupUi(this);
     this->setWindowTitle("Messagerie Multicast");
     ui->lineEdit->setText("Anonyme");
 
-    sender = new QUdpSocket(this);
-    sender->setSocketOption(QAbstractSocket::MulticastTtlOption, 1);
+    /* Setup socket UDP */
+    socket = new QUdpSocket(this);
+    socket->setSocketOption(QAbstractSocket::MulticastTtlOption, 1);
 
-    receiver = new QUdpSocket(this);
-    if (!receiver->bind(QHostAddress(MULTICAST_ADDRESS), MULTICAST_PORT, QUdpSocket::ReuseAddressHint|QUdpSocket::ShareAddress))
+    if (!socket->bind(QHostAddress(MULTICAST_ADDRESS), MULTICAST_PORT, QUdpSocket::ReuseAddressHint|QUdpSocket::ShareAddress))
         exit(EXIT_FAILURE);
-    receiver->joinMulticastGroup((QHostAddress(MULTICAST_ADDRESS)));
-    // receiver->setSocketOption(QAbstractSocket::ReceiveBufferSizeSocketOption, 1024*1024*8);
-    connect(receiver, &QUdpSocket::readyRead, this, &MainWindow::processPendingDatagram);
+    socket->joinMulticastGroup((QHostAddress(MULTICAST_ADDRESS)));
 
-    QDir dir("./images");
-    if (!dir.exists())
-        dir.mkdir("./images");
+    connect(socket, &QUdpSocket::readyRead, this, &MainWindow::processPendingDatagram);
 
+    /* Creation d'un dossier temporaire pour fichiers */
     QDir dir_tmp("./tmp");
-    if (!dir.exists())
-        dir.mkdir("./tmp");
+    if (!dir_tmp.exists())
+        dir_tmp.mkdir("./tmp");
 
+    /* Pop-up pseudo au demarrage */
     bool ok;
     QString text = QInputDialog::getText(this,
-                          tr("Messagerie Multicast"),
-                          tr("Choisissez votre pseudo"),
-                          QLineEdit::Normal,
-                          QDir::home().dirName(),
-                          &ok);
-
-    if ( ok && !text.isEmpty() )
+                                         tr("Messagerie Multicast"),
+                                         tr("Choisissez votre pseudo"),
+                                         QLineEdit::Normal,
+                                         QDir::home().dirName(),
+                                         &ok);
+    if (ok and !text.isEmpty())
         ui->lineEdit->setText(text);
     else
         ui->lineEdit->setText("Anonyme");
-
     ui->lineEdit->setReadOnly(true);
 
+    /* Prevenir les autres utilisateurs l'arivee */
     on_pushButton_Send_clicked();
 }
 
 
+/* Destructeur fenetre principale */
 MainWindow::~MainWindow()
 {
+    /* Destruction dossier tmp */
 //    QString path = "./tmp/";
 //    if (path.isEmpty())
 //          return;
@@ -80,19 +81,25 @@ MainWindow::~MainWindow()
 //        }
 //    }
 //    dir.rmpath(dir.absolutePath());
+
+    /* Prevenir les autres utilisateurs le depart */
     QByteArray datagram = ui->lineEdit->text().toUtf8();
-    datagram = datagram + " s'est deco :(";
-    sender->writeDatagram(datagram, QHostAddress(MULTICAST_ADDRESS), MULTICAST_PORT);
+    datagram = datagram + " s'est déconnecté :(";
+    socket->writeDatagram(datagram, QHostAddress(MULTICAST_ADDRESS), MULTICAST_PORT);
+
+    /* Destruction UI */
     delete ui;
 }
 
 
+/* Constructeur bool isJoined_ */
 void MainWindow::setisJoined(const bool& isJoined)
 {
     this->isJoined_ = isJoined;
 }
 
 
+/* Slot bouton "Envoyer" */
 void MainWindow::on_pushButton_Send_clicked()
 {
     if (isJoined_ == true)
@@ -100,28 +107,29 @@ void MainWindow::on_pushButton_Send_clicked()
         QByteArray message = ui->textEdit->toPlainText().toUtf8();
         QByteArray datagram = ui->lineEdit->text().toUtf8();
         datagram = datagram + " : " + message;
-        sender->writeDatagram(datagram, QHostAddress(MULTICAST_ADDRESS), MULTICAST_PORT);
+        socket->writeDatagram(datagram, QHostAddress(MULTICAST_ADDRESS), MULTICAST_PORT);
         ui->textEdit->clear();
     } else
     {
         QByteArray datagram = ui->lineEdit->text().toUtf8();
         datagram = datagram + ":arejoint#147258!@.";
-        sender->writeDatagram(datagram, QHostAddress(MULTICAST_ADDRESS), MULTICAST_PORT);
+        socket->writeDatagram(datagram, QHostAddress(MULTICAST_ADDRESS), MULTICAST_PORT);
         ui->textEdit->clear();
         setisJoined(true);
     }
 }
 
 
+/* Slot reception message */
 void MainWindow::processPendingDatagram()
 {
-    while (receiver->hasPendingDatagrams())
+    while (socket->hasPendingDatagrams())
     {
         QByteArray datagram;
         QHostAddress des;
         quint16 peerPort;
-        datagram.resize(receiver->pendingDatagramSize());
-        receiver->readDatagram(datagram.data(), datagram.size(), &des, &peerPort);
+        datagram.resize(socket->pendingDatagramSize());
+        socket->readDatagram(datagram.data(), datagram.size(), &des, &peerPort);
         if (datagram.size() < 2000)
         {
             QStringList msg_split = QString(datagram.data()).split(":");
@@ -179,6 +187,7 @@ QImage MainWindow::get_imagedata_from_byte(const QString &data)
 }
 
 
+/* Slot bouton "Envoyer une image" */
 void MainWindow::on_pushButton_Send_Image_clicked()
 {
     QString file_name = QFileDialog::getOpenFileName(this, "Image à envoyer", QDir::currentPath(), "Image Files(*.jpg *.png)");
@@ -189,14 +198,15 @@ void MainWindow::on_pushButton_Send_Image_clicked()
     ui->label_image->setPixmap(QPixmap::fromImage(image).scaled(ui->label_image->size()));
 
     image_file_data = get_imagedata_from_imagefile(image);
-    sender->writeDatagram(image_file_data.toLatin1(), image_file_data.size(), QHostAddress(MULTICAST_ADDRESS), MULTICAST_PORT);
+    socket->writeDatagram(image_file_data.toLatin1(), image_file_data.size(), QHostAddress(MULTICAST_ADDRESS), MULTICAST_PORT);
 
     QByteArray datagram = ui->lineEdit->text().toUtf8();
     datagram += ":/image#147258!@.";
-    sender->writeDatagram(datagram, QHostAddress(MULTICAST_ADDRESS), MULTICAST_PORT);
+    socket->writeDatagram(datagram, QHostAddress(MULTICAST_ADDRESS), MULTICAST_PORT);
 }
 
 
+/* Slot bouton "Enregistrer l'image" */
 void MainWindow::on_pushButton_Send_Image_2_clicked()
 {
     QString file_path = QFileDialog::getExistingDirectory(this, "Enregistrer sous...", "./");

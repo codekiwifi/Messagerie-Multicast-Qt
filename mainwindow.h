@@ -29,7 +29,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QUdpSocket* sender, * receiver;
+    QUdpSocket* socket;
 
 private:
     bool isJoined_;
@@ -37,9 +37,11 @@ private:
     QString image_file_data;
     QImage image;
     QString picture_data;
+
+private:
     QByteArray get_imagedata_from_imagefile(const QImage &image);
     QImage get_imagedata_from_byte(const QString &data);
-    // QUdpSocket* socket;
+
 };
 
 #endif // MAINWINDOW_H
