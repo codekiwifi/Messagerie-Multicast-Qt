@@ -19,10 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle("Messagerie Multicast");
-    // this->setWindowIcon(QIcon(":/res/icon.ico"));
     ui->lineEdit->setText("Anonyme");
-
-
 
     sender = new QUdpSocket(this);
     sender->setSocketOption(QAbstractSocket::MulticastTtlOption, 1);

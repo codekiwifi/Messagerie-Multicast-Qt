@@ -33,7 +33,4 @@ HEADERS += \
 FORMS += \
         mainwindow.ui
 
-ICON += "./icon.ico"
-
-#RC_FILE += ./res/icon.rc
-#RC_ICONS = icon.ico
+RC_ICONS = icon.ico
