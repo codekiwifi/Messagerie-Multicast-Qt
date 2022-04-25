@@ -1,7 +1,8 @@
 ## Mini Messagerie Multicast Qt
 
 Un petit logiciel qui se base sur UDP et Qt pour permettre de s'envoyer des messages, des images ou des fichiers.
-![image-20220423213237518](https://user-images.githubusercontent.com/82091053/164944349-96c05fe3-ff57-4a39-8357-2895eb2f5d6b.png)
+![ex6](https://user-images.githubusercontent.com/82091053/165154988-1b7d2778-4c2e-4a95-8e5a-ed599cf59e4e.png)
+
 
 
 
