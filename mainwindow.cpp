@@ -7,10 +7,6 @@
 #include <QInputDialog>
 
 
-#define MULTICAST_ADDRESS "239.255.255.252"
-#define MULTICAST_PORT    12345
-
-
 /* Constructeur fenetre principale */
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
