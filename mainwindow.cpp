@@ -58,7 +58,27 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     /* Destruction du dossier tmp */
-    // à faire
+    // à finir
+    //    QString path = "./tmp/";
+    //    if (path.isEmpty())
+    //          return;
+    //    QDir dir(path);
+    //    if(!dir.exists())
+    //        return;
+    //    dir.setFilter(QDir::AllEntries | QDir::NoDotAndDotDot);
+    //    QFileInfoList fileList = dir.entryInfoList();
+    //    foreach (QFileInfo file, fileList){
+    //        if (file.isFile()){
+    //            bool isDelete = file.dir().remove(file.fileName());
+    //            if(isDelete) {
+    //                m_fileCount++;
+    //            }
+    //            qDebug() << "isDelete= " << isDelete << " m_fileCount = " << m_fileCount << " filename= " << file.fileName();
+    //        }else{
+    //            deleteDir(file.absoluteFilePath());
+    //        }
+    //    }
+    //    dir.rmpath(dir.absolutePath());
 
     /* Prevenir les autres utilisateurs le depart */
     QByteArray datagram = ui->lineEdit_pseudo->text().toUtf8();
