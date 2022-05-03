@@ -39,11 +39,7 @@ public:
 
 
 private slots:
-    /* Slot réception message
-     * Lecture, traitement et affichage des messages reçus.
-     * On distingue plusieurs cas de figure en fonction du message codé reçu.
-     * Le codage a pour but de différencier les messages spéciaux (messages d'arrivée/de départ, images...) avec les messages textuels normaux.
-     * Les messages sont composés de 3 parties séparées par des ":" au format "pseudo:numero anonyme:message utile". */
+    /* Slot réception message */
     void processDatagram();
 
     /* Slot bouton "Envoyer" */
@@ -64,18 +60,13 @@ private:
 
 
 private:
-    /* Si isJoined_ = false, l'utilisateur annonce à tout le monde son arrivée. Ce bool ne sera donc utilisé qu'une fois */
+    /* isJoined_ */
     bool isJoined_;
 
-    /* Le numéro anonyme sert à différencier les anonymes.
-     * Ce nombre est généré grâce à un nombre pseudo-aléatoire.
-     * Il sera additionné au numéro de port avant d'être affiché sur la fenêtre de chat.
-     * Il vaut 0 si l'utilisateur n'est pas anonyme.
-     * Un utilisateur est anonyme s'il clique sur "cancel" lors du choix du pseudo */
+    /* Le numéro anonyme */
     int anonymousNumber;
 
-    /* count_image sert à numéroter les images.
-     * Il est utilisé lors du nommage des images. */
+    /* count_image */
     int count_image;
 
 
