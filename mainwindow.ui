@@ -54,7 +54,7 @@
         <string>Envoyer une image</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_Send_Image_2">
+      <widget class="QPushButton" name="pushButton_Save_Image">
        <property name="text">
         <string>Sauvegarder l'image</string>
        </property>
@@ -117,7 +117,7 @@
      </spacer>
     </item>
     <item row="0" column="4" colspan="2">
-     <widget class="QLineEdit" name="lineEdit"/>
+     <widget class="QLineEdit" name="lineEdit_pseudo"/>
     </item>
     <item row="2" column="2" rowspan="4" colspan="4">
      <widget class="QLabel" name="label_image">
